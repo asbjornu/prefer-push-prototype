@@ -9,7 +9,10 @@ const options = {
 // https is necessary otherwise browsers will not
 // be able to connect
 const server = http2.createSecureServer(options);
-server.on('stream', (stream, headers) => {
+
+server.on('stream', (stream, headers, flags) => {
+    console.log(headers);
+
     // stream is a Duplex
     // headers is an object containing the request headers
 
