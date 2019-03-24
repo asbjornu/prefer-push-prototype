@@ -11,11 +11,34 @@ const options = {
 const server = http2.createSecureServer(options);
 
 server.on('stream', (stream, headers, flags) => {
-    var result = route(headers, stream);
+    const statCheck = function(stat, statHeaders) {
+        statHeaders['last-modified'] = stat.mtime.toUTCString();
+    }
 
-    // TODO: Figure out why fs.readFile() works while stream.respondWithFile() doesn't.
-    var file = './resources/' + result.file;
-    fs.readFile(file, (err, data) => {
+    const onError = function(err) {
+        if (err.code === 'ENOENT') {
+            var result404 = route('404');
+            stream.respondWithFile('./resources/404.json', {
+                'content-type': 'application/problem+json'
+            });
+        } else {
+            stream.respond({
+                ':status': 500
+            });
+        }
+        stream.end();
+    }
+
+    const path = headers[':path'];
+    const result = route(path);
+    const file = './resources/' + result.file;
+
+    stream.respondWithFile(file, {
+        ':status': result.status,
+        'content-type': result.contentType,
+    }, { statCheck, onError });
+
+    /*s.readFile(file, (err, data) => {
         if (err) {
             console.log(err);
             return;
@@ -27,14 +50,12 @@ server.on('stream', (stream, headers, flags) => {
         });
         stream.write(data);
         stream.end();
-    });
+    });*/
 });
 
 server.listen(3000);
 
-const route = function(headers, stream) {
-    var path = headers[':path'];
-
+const route = function(path) {
     console.log('path', path);
 
     switch (path) {
