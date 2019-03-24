@@ -1,3 +1,16 @@
 {
-    "root": true
-}
+    "hero": {
+      "name": "R2-D2",
+      "friends": [
+        {
+          "id": "/heroes/luke-skywalker"
+        },
+        {
+          "id": "/heroes/han-solo"
+        },
+        {
+          "id": "/heroes/leia-organa"
+        }
+      ]
+    }
+  }

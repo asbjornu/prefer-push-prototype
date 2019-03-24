@@ -11,21 +11,43 @@ const options = {
 const server = http2.createSecureServer(options);
 
 server.on('stream', (stream, headers, flags) => {
-    console.log(headers);
+    var result = route(headers, stream);
 
-    // stream is a Duplex
-    // headers is an object containing the request headers
+    // TODO: Figure out why fs.readFile() works while stream.respondWithFile() doesn't.
+    var file = './resources/' + result.file;
+    fs.readFile(file, (err, data) => {
+        if (err) {
+            throw err;
+        }
 
-    // respond will send the headers to the client
-    // meta headers starts with a colon (:)
-    stream.respond({
-        ':status': 200
+        stream.respond({
+            ':status': result.status,
+            'content-type': result.contentType,
+        });
+        stream.write(data);
+        stream.end();
     });
-
-    // there is also stream.respondWithFile()
-    // and stream.pushStream()
-
-    stream.end('Hello World!');
 });
 
 server.listen(3000);
+
+const route = function(headers, stream) {
+    var path = headers[':path'];
+
+    console.log('path', path);
+
+    switch (path) {
+        case '/':
+            return {
+                file: 'root.json',
+                status: 200,
+                contentType: 'application/json'
+            }
+    }
+
+    return {
+        file: '404.json',
+        status: 404,
+        contentType: 'application/problem+json'
+    }
+}

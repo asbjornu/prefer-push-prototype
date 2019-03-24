@@ -15,7 +15,7 @@ WORKDIR /app
 COPY --from=cert *.pem /app/certs/
 COPY package.json /app
 RUN npm install
-COPY api.js /app
+COPY . /app
 EXPOSE 8081
 
 ENTRYPOINT ["node", "api.js"]
