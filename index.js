@@ -1,7 +1,9 @@
+var fs = require('fs');
 const http2 = require('http2');
 const options = {
-    key: getKeySomehow(),
-    cert: getCertSomehow()
+    key: fs.readFileSync('./certs/server-key.pem'),
+    cert: fs.readFileSync('./certs/server-crt.pem'),
+    ca: fs.readFileSync('./certs/ca-crt.pem')
 };
 
 // https is necessary otherwise browsers will not

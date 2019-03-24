@@ -7,8 +7,3 @@ services:
     container_name: "prefer-push-api"
     ports:
       - "3000:3000"
-    networks:
-      - prefer-push-net
-
-networks:
-  prefer-push-net:
