@@ -1,9 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Prefer-Push prototype</title>
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+        <script>
+            async function fetchHeroes() {
+                var heroesJson = await fetch('/heroes').then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        console.error(response);
+                        throw new Error('Invalid response from server');
+                    }
+                });
+
+                var heroes = heroesJson.heroes;
+                var tbody = document.querySelector('table#heroes > tbody');
+
+                for (const heroToFetch of heroes) {
+                    console.log(heroToFetch);
+                    var heroJson = await fetch(heroToFetch.id).then(function(response) {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            console.error(response);
+                            throw new Error('Invalid response from server');
+                        }
+                    });
+
+                    var row = document.createElement('tr');
+                    var nameColumn = document.createElement('td');
+                    var heightColumn = document.createElement('td');
+
+                    nameColumn.innerText = heroJson.hero.name;
+                    heightColumn.innerText = heroJson.hero.height;
+
+                    row.appendChild(nameColumn);
+                    row.appendChild(heightColumn);
+                    tbody.appendChild(row);
+                }
+            }
+
+            window.addEventListener('DOMContentLoaded', fetchHeroes);
+        </script>
     </head>
     <body>
-        <h1>Prefer-Push prototype</h1>
+        <div class="container-fluid">
+            <h1>Heroes</h1>
+            <table id="heroes" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Height</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
