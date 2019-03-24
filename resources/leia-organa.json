@@ -1,0 +1,17 @@
+{
+    "hero": {
+        "name": "Leia Organa",
+        "height": 1.54,
+        "friends": [
+            {
+                "id": "/heroes/r2-d2"
+            },
+            {
+                "id": "/heroes/luke-skywalker"
+            },
+            {
+                "id": "/heroes/han-solo"
+            }
+        ]
+    }
+}

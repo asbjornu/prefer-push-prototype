@@ -1,6 +1,7 @@
 {
     "hero": {
       "name": "R2-D2",
+      "height": 1.09,
       "friends": [
         {
           "id": "/heroes/luke-skywalker"

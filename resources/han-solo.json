@@ -1,0 +1,17 @@
+{
+    "hero": {
+        "name": "Han Solo",
+        "height": 1.85,
+        "friends": [
+            {
+                "id": "/heroes/r2-d2"
+            },
+            {
+                "id": "/heroes/luke-skywalker"
+            },
+            {
+                "id": "/heroes/leia-organa"
+            }
+        ]
+    }
+}

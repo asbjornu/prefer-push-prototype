@@ -1,0 +1,17 @@
+{
+    "hero": {
+        "name": "Luke Skywalker",
+        "height": 1.72,
+        "friends": [
+            {
+                "id": "/heroes/r2-d2"
+            },
+            {
+                "id": "/heroes/han-solo"
+            },
+            {
+                "id": "/heroes/leia-organa"
+            }
+        ]
+    }
+}

@@ -17,7 +17,8 @@ server.on('stream', (stream, headers, flags) => {
     var file = './resources/' + result.file;
     fs.readFile(file, (err, data) => {
         if (err) {
-            throw err;
+            console.log(err);
+            return;
         }
 
         stream.respond({
@@ -39,10 +40,47 @@ const route = function(headers, stream) {
     switch (path) {
         case '/':
             return {
-                file: 'root.json',
+                file: 'index.html',
+                status: 200,
+                contentType: 'text/html; charset=utf-8'
+            };
+
+        case '/heroes':
+        case '/heroes/':
+            return {
+                file: 'heroes.json',
                 status: 200,
                 contentType: 'application/json'
-            }
+            };
+
+        case '/heroes/r2-d2':
+            return {
+                file: 'r2-d2.json',
+                status: 200,
+                contentType: 'application/json'
+            };
+
+        case '/heroes/luke-skywalker':
+            return {
+                file: 'luke-skywalker.json',
+                status: 200,
+                contentType: 'application/json'
+            };
+
+        case '/heroes/han-solo':
+            return {
+                file: 'han-solo.json',
+                status: 200,
+                contentType: 'application/json'
+            };
+
+        case '/heroes/leia-organa':
+            return {
+                file: 'leia-organa.json',
+                status: 200,
+                contentType: 'application/json'
+            };
+
     }
 
     return {

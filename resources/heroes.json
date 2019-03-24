@@ -1,0 +1,16 @@
+{
+    "heroes": [
+        {
+            "id": "/heroes/r2d2"
+        },
+        {
+            "id": "/heroes/luke-skywalker"
+        },
+        {
+            "id": "/heroes/han-solo"
+        },
+        {
+            "id": "/heroes/leia-organa"
+        }
+    ]
+}
