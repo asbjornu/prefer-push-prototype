@@ -3,7 +3,8 @@ const http2 = require('http2');
 const options = {
     key: fs.readFileSync('./certs/server-key.pem'),
     cert: fs.readFileSync('./certs/server-crt.pem'),
-    ca: fs.readFileSync('./certs/ca-crt.pem')
+    ca: fs.readFileSync('./certs/ca-crt.pem'),
+    enablePush: true
 };
 
 // https is necessary otherwise browsers will not
@@ -11,46 +12,40 @@ const options = {
 const server = http2.createSecureServer(options);
 
 server.on('stream', (stream, headers, flags) => {
-    const statCheck = function(stat, statHeaders) {
-        statHeaders['last-modified'] = stat.mtime.toUTCString();
-    }
-
-    const onError = function(err) {
-        if (err.code === 'ENOENT') {
-            var result404 = route('404');
-            stream.respondWithFile('./resources/404.json', {
-                'content-type': 'application/problem+json'
-            });
-        } else {
-            stream.respond({
-                ':status': 500
-            });
-        }
-        stream.end();
-    }
-
     const path = headers[':path'];
     const result = route(path);
     const file = './resources/' + result.file;
+    const content = fs.readFileSync(file);
 
-    stream.respondWithFile(file, {
+    if (result.contentType.indexOf('json') > 0 && headers['prefer-push'] == 'friends') {
+        const json = JSON.parse(content);
+
+        for (const friend of json.hero.friends) {
+            const friendResult = route(friend.id);
+            const friendFile = './resources/' + friendResult.file;
+            const friendContent = fs.readFileSync(friendFile);
+
+            stream.pushStream({ ':path': friend.id }, (err, pushStream) => {
+                if (err) {
+                    throw err;
+                }
+
+                console.log(`Pushing ${friend.id}`, friendResult);
+
+                pushStream.respond({
+                    ':status': friendResult.status,
+                    'content-type': friendResult.contentType
+                });
+                pushStream.end(friendContent);
+            });
+        }
+    }
+
+    stream.respond({
         ':status': result.status,
         'content-type': result.contentType,
-    }, { statCheck, onError });
-
-    /*s.readFile(file, (err, data) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        stream.respond({
-            ':status': result.status,
-            'content-type': result.contentType,
-        });
-        stream.write(data);
-        stream.end();
-    });*/
+    });
+    stream.end(content);
 });
 
 server.listen(3000);

@@ -23,8 +23,11 @@
                 var tbody = document.querySelector('table#heroes > tbody');
 
                 for (const heroToFetch of heroes) {
-                    console.log(heroToFetch);
-                    var heroJson = await fetch(heroToFetch.id).then(function(response) {
+                    var heroJson = await fetch(heroToFetch.id, {
+                        headers: {
+                            'Prefer-Push': 'friends'
+                        }
+                    }).then(function(response) {
                         if (response.ok) {
                             return response.json();
                         } else {
