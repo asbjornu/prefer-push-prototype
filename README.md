@@ -1,2 +1,3 @@
-# prefer-push-prototype
-Prototype of the Prefer-Push header
+# `Prefer-Push` Prototype
+
+Prototype of the `Prefer-Push` header for HTTP/2 in Node.js.
